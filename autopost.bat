@@ -4,7 +4,7 @@ set "CURRENT_DIR=%CD%"
 
 
 :: Store the project path
-set "PROJECT_DIR=C:\TelegramAutoUploading"
+set "PROJECT_DIR=C:\autopost"
 
 
 :: Change directory to the project folder

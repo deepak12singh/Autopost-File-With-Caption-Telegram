@@ -27,9 +27,8 @@ class DynamicTable:
     def __init__(self, headers):
         self.headers = headers
         self.data = []
-        self.colors = [Fore.WHITE,Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA]
-        self.used_colors = [Fore.WHITE
-                            ,Fore.RED,Fore.MAGENTA,Fore.BLUE,]  # To keep track of used colors
+        self.colors = [Fore.WHITE]#,Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA]
+        self.used_colors = [Fore.WHITE]#,Fore.RED,Fore.MAGENTA,Fore.BLUE,]  # To keep track of used colors
 
     @save_to_file_decorator("table_data.txt")
     def add_row(self, row):
@@ -85,14 +84,14 @@ class DynamicTable:
         return "\n".join(colored_lines)
 
 
-if __name__ == "__main__":
-
-    headers = ["Sr.", "File Name", "Time"]
-    dynamic_table = DynamicTable(headers)
 
 
-    dynamic_table.add_row(["1", "ShortName.mp4", "2.0001s"])
-    time.sleep(1)
-    dynamic_table.add_row(["2", "VeryLongFileNameThatExceedsNormalLength.mp4", "1.8002s"])
-    time.sleep(1)
-    dynamic_table.add_row(["3", "MediumLengthFileName.mp4", "3.1234s"])
+# headers = ["Sr.", "File Name", "Time"]
+# dynamic_table = DynamicTable(headers)
+
+
+# dynamic_table.add_row(["1", "ShortName.mp4", "2.0001s"])
+# time.sleep(1)
+# dynamic_table.add_row(["2", "VeryLongFileNameThatExceedsNormalLength.mp4", "1.8002s"])
+# time.sleep(1)
+# dynamic_table.add_row(["3", "MediumLengthFileName.mp4", "3.1234s"])

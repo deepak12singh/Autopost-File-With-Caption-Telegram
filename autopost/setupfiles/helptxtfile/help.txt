@@ -5,16 +5,17 @@
 1. General Commands:
    - autopost help               : Show this general help message.
    - autopost -h <command>       : Show help for specific commands.
+   - autopost -h allconfig       : Show all config vaiable an what is set it.
 
 2. Running the Script:
    - autopost run here               : Run the script with the current directory as argument.
 
-3. Setting the Generative AI Key:
-   - autopost set key <key_value>: Set the Generative AI key for the script.
+3. Setting Config file:
+   - autopost set <key_Name> <key_value>: Set the Generative AI key for the script.
    - This key is necessary for accessing certain features.
 
 4. Example Commands:
    - autopost help
    - autopost here
-   - autopost set key <key_value>
+   - autopost set <key_Name> <key_value>
 ==================================================

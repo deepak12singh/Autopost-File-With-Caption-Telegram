@@ -1,0 +1,14 @@
+Help for 'Run Code' Command:
+==================================================
+This command starts the main script with the current directory as the argument.
+Use the 'here' argument to specify the directory where your PDF files are stored.
+
+Command: autopost here
+
+Common Use Case:
+   - If your PDFs are stored in the same folder as this script, use the command 'autopost here' to run it.
+   - Make sure that the directory path is correct.
+
+Troubleshooting:
+   - If no PDFs are found, ensure the directory contains PDF files.
+==================================================

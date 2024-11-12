@@ -1,0 +1,20 @@
+==================================================
+ Detailed Help:
+==================================================
+
+1. General Commands:
+   - autopost help               : Show this general help message.
+   - autopost -h <command>       : Show help for specific commands.
+
+2. Running the Script:
+   - autopost run here               : Run the script with the current directory as argument.
+
+3. Setting the Generative AI Key:
+   - autopost set key <key_value>: Set the Generative AI key for the script.
+   - This key is necessary for accessing certain features.
+
+4. Example Commands:
+   - autopost help
+   - autopost here
+   - autopost set key <key_value>
+==================================================

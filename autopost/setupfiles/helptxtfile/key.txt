@@ -1,0 +1,15 @@
+Help for 'Set Key' Command:
+==================================================
+This command is used to configure the Generative AI key for the script.
+Without the correct key, some script features will not work.
+
+Command: autopost set key <key_value>
+
+Common Use Case:
+   - Use this command to set your Generative AI API key.
+   - The key should be a valid API key for the generative model being used.
+
+Troubleshooting:
+   - If you receive an error after setting the key, check if your key is correct.
+   - Ensure there are no extra spaces or characters in the key value.
+==================================================

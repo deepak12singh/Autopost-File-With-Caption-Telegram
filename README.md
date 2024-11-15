@@ -113,7 +113,7 @@ autopost help
 ## **Video Demo**
 
 Check out the following video demo for a step-by-step walkthrough of the installation and usage process:  
-[![Video Demo](screenshot/2024-11-16_021557.png)](https://youtu.be/ArJkK91Oh_c)
+[![Video Demo](screenshot/2024-11-16_021557.png)]([https://youtu.be/ArJkK91Oh_c](https://youtu.be/pwiJrOjv8A0))
 
 ---
 

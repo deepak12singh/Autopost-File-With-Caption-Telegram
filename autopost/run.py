@@ -1,5 +1,4 @@
 
-print("Running the Run.py ..................")
 import sys
 import logging
 from setupfiles.help import show_detailed_help, show_command_help
@@ -22,7 +21,7 @@ def main():
     # Check if there are enough command-line arguments
     if len(sys.argv) < 3:
         logging.error("Insufficient arguments provided.")
-        print("Error: Insufficient arguments provided. Use 'autodata help' for usage information.")
+        print("\n   Error: Insufficient arguments provided. Use 'autopost help' for usage information.\n")
         return
 
     # Retrieve command-line arguments
@@ -35,10 +34,10 @@ def main():
     if command == 'run':
         if argv[2] == 'here':
             current_path = argv[-1]
-            print(f"     Current path: {current_path}    ")
+            # print(f"     Current path: {current_path}    ")
             logging.info("Current path set to: %s", current_path)
             # Run the setting.py first
-            subprocess.run([r'C:\autopost\.venv\Scripts\python.exe', r'setting.py','run','here',  current_path])
+            subprocess.run([r'C:\PythonCostumScript\autopost\.venv\Scripts\python.exe', r'setting.py','run','here',  current_path])
             # Now run main.py after setting.py completes
 
         elif argv[2] in ('path', 'p'):
@@ -47,10 +46,14 @@ def main():
                 print(f"     Path: {specified_path}     ")
                 logging.info("Path set to: %s", specified_path)
                 # Now run main.py with the specified path
-                subprocess.run([r'C:\autopost\.venv\Scripts\python.exe', r'setting.py','run','path',  specified_path])
+                subprocess.run([r'C:\PythonCostumScript\autopost\.venv\Scripts\python.exe', r'setting.py','run','path',  specified_path])
             else:
                 logging.error("Path argument missing for command 'path' or 'p'")
                 print("Error: Path argument is missing. Please specify a path after 'path' or 'p' command.")
+        else:
+            show_command_help('run')
+            
+        
     elif command in ('help', 'h', '-h'):
         if len(argv) > 3:
             print('.................',argv[2])
@@ -76,7 +79,7 @@ def main():
             print("Error: key argument is missing. Please specify a key after 'key' and 'value' of it command.")
     else:
         logging.info("Displaying detailed help.")
-        command_setting = [r'C:\autopost\.venv\Scripts\python.exe', r'setting.py']
+        command_setting = [r'C:\PythonCostumScript\autopost\.venv\Scripts\python.exe', r'setting.py']
         for i in argv:
             command_setting.append(i)
         subprocess.run(command_setting)

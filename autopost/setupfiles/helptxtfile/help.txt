@@ -13,8 +13,10 @@
 3. Setting Config file:
    - autopost set <key_Name> <key_value>: Set the Generative AI key for the script.
    - This key is necessary for accessing certain features.
+4. Uninstall  the MakeInstaller:
+   - autopost uninstall             : This is For uninstall the autopost from Your PC.
 
-4. Example Commands:
+5. Example Commands:
    - autopost help
    - autopost here
    - autopost set <key_Name> <key_value>

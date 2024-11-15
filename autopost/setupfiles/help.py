@@ -28,8 +28,8 @@ def show_command_help(command):
         print(read_text_file(r'.\setupfiles\helptxtfile\key.txt'))
     
     else:
-        print("\nInvalid command! Type 'autopost help' for general help.")
-        print("Try 'autopost -h <command>' for more specific help on a particular command.")
+        print("\nInvalid command! Type 'ProjectStart help' for general help.")
+        print("Try 'ProjectStart -h <command>' for more specific help on a particular command.")
 
 
 def main():

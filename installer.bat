@@ -1,9 +1,13 @@
 @echo off
-
+:: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+:: Batch Script for Uninstallation                              +
+:: Author: Deepak Singh                                         +
+:: Description: Removes the project folder and cleans up paths. +
+:: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 REM Define project name and paths
 set "project_name=autopost"
 set SOURCE=%~dp0%project_name%
-set DEST=C:\%project_name%
+set DEST=C:\PythonCostumScript\%project_name%
 set SCRIPT_DIR=%~dp0installer\
 set SCRIPT_DIR_BAT=%~dp0
 
@@ -70,3 +74,4 @@ if exist %VENV_PATH% (
 
 echo Installation complete.
 pause
+cd /d "%CURRENT_DIR%"

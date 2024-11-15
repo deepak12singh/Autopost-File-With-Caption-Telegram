@@ -34,7 +34,7 @@ def clean_path():
 
 
 def project_name_to_c_drive_path(project_name):
-    bat_file_directory = os.path.join("C:\\", project_name)
+    bat_file_directory = os.path.join("C:\\",'PythonCostumScript', project_name)
     return bat_file_directory
 
 def read_bat_file_get_project_name_to_path(file_path):

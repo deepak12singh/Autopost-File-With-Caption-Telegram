@@ -1,5 +1,6 @@
 
-GENERATIVE_AI_KEY = 'None'
+time_dale = 1.0
 
-time_dale = 1.52
-    
+folder_and_file_join_symblo = '._'
+
+colorfull= 0

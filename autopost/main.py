@@ -8,13 +8,13 @@ from custom_print import DynamicTable
 from processbar import process_bar
 from datetime import datetime
 from functools import wraps
+from config import *
 
-# Delay time in seconds
-time_dale = 1.0
+
 
 # Setup dynamic table headers
 headers = ["Sr.", "File Name", "Time"]
-dynamic_table = DynamicTable(headers)
+dynamic_table = DynamicTable(headers,colorfull=colorfull)
 
 def timeit(func):
     @wraps(func)
@@ -69,7 +69,7 @@ async def send_file_to_telegram(file_path, attempt=1, folder_name=''):
     # Only add the folder name as a prefix if the file is under a folder
     file_name_without_extension = os.path.splitext(os.path.basename(file_path))[0]
     if folder_name:
-        file_name_without_extension = folder_name + "_" + file_name_without_extension
+        file_name_without_extension = folder_name + folder_and_file_join_symblo + file_name_without_extension
     pyperclip.copy(file_name_without_extension)
     await asyncio.sleep(time_dale)
     pyautogui.hotkey('ctrl', 'v')
@@ -78,17 +78,22 @@ async def send_file_to_telegram(file_path, attempt=1, folder_name=''):
     await asyncio.sleep(2)
     print(f'File "{file_path}" sent to Telegram.')
 
-async def process_folders(sorted_files_by_folder):
+async def process_folders(sorted_files_by_folder,totle_file=0):
     """Process all folders and send files to Telegram."""
+    File_number = 0
     for folder_data in sorted_files_by_folder[:-1]:
         for folder_name, files in folder_data.items():
             total_files = len(files)
             for index, file_path in enumerate(files, start=1):
                 if folder_name == "Nothing_Folder_Name":
                     await send_file_to_telegram(file_path, str(index))
+                    process_bar(index, total_files,symbol='*',bar_length=100,folder_name='All File Status')
                 else:
                     await send_file_to_telegram(file_path, str(index), folder_name)
-                process_bar(index, total_files)
+                    process_bar(index, total_files,folder_name=folder_name)
+                    File_number = File_number + 1
+                    print('')
+                    process_bar(File_number,totle_file,symbol='*',bar_length=100,folder_name='All File Status')
                 await asyncio.sleep(time_dale)
 
 
@@ -100,6 +105,13 @@ async def main():
     sorted_files_by_folder = get_sorted_files_by_folder(root_directory)
     # Only append the sorted folder paths (not the boolean result)
     folder_exists, folders_list, _ = check_dir_under_folder(root_directory)
+    
+    total_files = 0
+    for i, folder_dict in enumerate(sorted_files_by_folder):
+        if isinstance(folder_dict, dict):  # Ensure it's a dictionary
+            for key, value in folder_dict.items():
+                total_files += len(value)  # Increment total_files by the length of the list
+        # Append `folders_list` to `sorted_files_by_folder`
     if folder_exists:
         sorted_files_by_folder.append(folders_list)
     else:
@@ -110,11 +122,9 @@ async def main():
             dirc["Nothing_Folder_Name"]=data
         # sorted_files_by_folder[0] = dirc
         sorted_files_by_folder.append([])
-
-    
     print("Uploading started...")
     await switch_to_application()
-    await process_folders(sorted_files_by_folder)
+    await process_folders(sorted_files_by_folder,totle_file=total_files)
     await switch_to_application()
 
 if __name__ == '__main__':

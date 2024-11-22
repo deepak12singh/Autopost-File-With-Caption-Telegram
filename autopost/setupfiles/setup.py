@@ -1,10 +1,22 @@
 import sys
 import subprocess
 
+
+def print_config_file():
+    print()
+    print("#"*25,' config.py Start ',"#"*25,'\n')
+    print(read_text_file('config.py'))
+    print()
+    print("#"*25,' config.py End ',"#"*25,'\n')
+    print("Commond is autopost set <key> <value>\n")
+    print('Exmalpe:\n\n\tkey = time_dale\n\tvalue = 1.0')
+
+
 def find_line_number(filename, search_key):
     """Finds and returns the line numbers where `search_key` appears in the file. 
     If not found, returns the line number after the last line."""
     line_numbers = []
+    # print(search_key)
     try:
         with open(filename, "r") as file:
             lines = file.readlines()
@@ -17,7 +29,7 @@ def find_line_number(filename, search_key):
             return line_numbers
         else:
             # If not found, return the next line number after the last line
-            return [len(lines) + 1]
+            return False
     except FileNotFoundError:
         return f"The file {filename} was not found."
 
@@ -37,9 +49,10 @@ def delete_line_by_number(filename, line_number):
             with open(filename, "w") as file:
                 file.writelines(lines)
             
-            print(f"Line {line_number} has been deleted from {filename}.")
+            # print(f"Line {line_number} has been deleted from {filename}.")
         else:
-            print(f"Line {line_number} is out of range. The file has only {len(lines)} lines.")
+            pass
+            # print(f"Line {line_number} is out of range. The file has only {len(lines)} lines.")
             
     except FileNotFoundError:
         print(f"The file {filename} was not found.")
@@ -67,46 +80,36 @@ def insert_line_at_number(filename, line_number, new_data):
         with open(filename, "w") as file:
             file.writelines(lines)
         
-        print(f"Inserted data at line {line_number} in {filename}.")
+        # print(f"Inserted data at line {line_number} in {filename}.")
     except FileNotFoundError:
         print(f"The file {filename} was not found.")
 
-def Set_GENERATIVE_AI_KEY_(key='None'):
-    # Usage example
-    filename = "config.py"
-    line_numbers = find_line_number(filename, "GENERATIVE_AI_KEY")
 
-    # If the search_key was not found, line_numbers will have the next available line number
-    line_number = line_numbers[-1]
-    print(f"Line number to insert: {line_number}")
-
-    try:
-        # If line_number is not in range or invalid, avoid deletion attempt
-        delete_line_by_number(filename, line_number)
-    except Exception as e:
-        print(f"Error in deletion: {e}")
-
-    # Insert the new data at the specified line number
-    insert_line_at_number(filename, line_number, f"GENERATIVE_AI_KEY = '{key}'")
-    print('Succefuly update GENERATIVE_AI_KEY = ',key)
 
 def Set_All_Config(key, value):
     filename = "config.py"
-    line_numbers = find_line_number(filename,value)
+    line_numbers = find_line_number(filename,key)
+    if  line_numbers == False :
+        print (key," Not Requrment " )
+        print_config_file()
+    else:
+        # If the search_key was not found, line_numbers will have the next available line number
+        line_number = line_numbers[-1]
+        # print(f"Line number to insert: {line_number}")
+        try:
+            # If line_number is not in range or invalid, avoid deletion attempt
+            delete_line_by_number(filename, line_number)
+        except Exception as e:
+            print(f"Error in deletion: {e}")
 
-    # If the search_key was not found, line_numbers will have the next available line number
-    line_number = line_numbers[-1]
-    print(f"Line number to insert: {line_number}")
-
-    try:
-        # If line_number is not in range or invalid, avoid deletion attempt
-        delete_line_by_number(filename, line_number)
-    except Exception as e:
-        print(f"Error in deletion: {e}")
-
-    # Insert the new data at the specified line number
-    insert_line_at_number(filename, line_number, f"{key} = '{value}'")
-    print(f'Succefuly update {key} = {value}')
+        # Insert the new data at the specified line number
+        try:
+            value = float(value)
+            insert_line_at_number(filename, line_number, f"{key} = {value}")
+        except:
+            value = str(value)
+            insert_line_at_number(filename, line_number, f"{key} = '{value}'")
+        print_config_file()
 
 
 def run_other_file(file_path, args):
@@ -140,7 +143,3 @@ def read_text_file(file_path):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
-key = sys.argv[1]
-if __name__ == '__main__':
-    Set_GENERATIVE_AI_KEY_(key)

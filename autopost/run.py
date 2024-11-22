@@ -2,8 +2,7 @@
 import sys
 import logging
 from setupfiles.help import show_detailed_help, show_command_help
-from config import GENERATIVE_AI_KEY
-from setupfiles.setup import Set_GENERATIVE_AI_KEY_, Set_All_Config,read_text_file
+from setupfiles.setup import  Set_All_Config,read_text_file,print_config_file
 import subprocess
 
 # Setting up logging configuration
@@ -14,8 +13,6 @@ logging.basicConfig(
 )
 
 # Log starting point
-logging.info("Script started")
-logging.info("Config file data: GENERATIVE_AI_KEY=%s", GENERATIVE_AI_KEY)
 
 def main():
     # Check if there are enough command-line arguments
@@ -65,18 +62,19 @@ def main():
         argv = argv[:-1]
         if len(argv) > 2:
             key = argv[2]
-            if key == 'key':
-                value = argv[3]
-                print(f"     Path: {key}  = {value}   ")
-                Set_GENERATIVE_AI_KEY_(value)
-            elif key == '-h':
-                print(read_text_file('config.py'))
+            if key == '-h':
+                print_config_file()
             else:
-                value = argv[3]
-                Set_All_Config(key, value)
+                try:
+                    value = argv[3]
+                    Set_All_Config(key, value)
+                except :
+                    print_config_file()
+                    
         else:
             logging.error("Path argument missing for command 'set' or '-s'")
             print("Error: key argument is missing. Please specify a key after 'key' and 'value' of it command.")
+            print_config_file()
     else:
         logging.info("Displaying detailed help.")
         command_setting = [r'C:\PythonCostumScript\autopost\.venv\Scripts\python.exe', r'setting.py']

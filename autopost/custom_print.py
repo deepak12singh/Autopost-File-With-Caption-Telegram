@@ -24,12 +24,16 @@ def save_to_file_decorator(file_name):
 
 
 class DynamicTable:
-    def __init__(self, headers):
+    def __init__(self, headers,colorfull=True):
         self.headers = headers
         self.data = []
-        self.colors = [Fore.WHITE,Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA]
-        self.used_colors = [Fore.WHITE
-                            ,Fore.RED,Fore.MAGENTA,Fore.BLUE,]  # To keep track of used colors
+        if colorfull:
+            self.colors = [Fore.WHITE,Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.CYAN, Fore.MAGENTA]
+            self.used_colors = [Fore.WHITE,Fore.RED,Fore.MAGENTA,Fore.BLUE,]
+        else:
+            self.colors = [Fore.WHITE]
+            self.used_colors = [Fore.WHITE]  # To keep track of used colors
+        
 
     @save_to_file_decorator("table_data.txt")
     def add_row(self, row):

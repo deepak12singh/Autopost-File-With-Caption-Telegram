@@ -3,108 +3,119 @@ import pyautogui
 import asyncio
 import pyperclip
 import sys
-from getfiles import list_files_in_directory
+from getfiles import get_sorted_files_by_folder, check_dir_under_folder
 from custom_print import DynamicTable
+from processbar import process_bar
+from datetime import datetime
+from functools import wraps
 
 # Delay time in seconds
-time_dale = 0.8
+time_dale = 1.0
 
-from datetime import datetime
-from functools import wraps
+# Setup dynamic table headers
 headers = ["Sr.", "File Name", "Time"]
 dynamic_table = DynamicTable(headers)
-import os
-from functools import wraps
-from datetime import datetime
-
-from functools import wraps
-from datetime import datetime
-import os
 
 def timeit(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
-        start_time = datetime.now()  # Record the start time
-        result = await func(*args, **kwargs)  # Await the original function
-        end_time = datetime.now()  # Record the end time
-        elapsed_time = (end_time - start_time).total_seconds()  # Calculate elapsed time in seconds
-        # Convert elapsed time to hours, minutes, and seconds
+        start_time = datetime.now()
+        result = await func(*args, **kwargs)
+        end_time = datetime.now()
+        elapsed_time = (end_time - start_time).total_seconds()
+
+        # Format elapsed time
         hours, remainder = divmod(elapsed_time, 3600)
         minutes, seconds = divmod(remainder, 60)
-        if 120 <= elapsed_time:
-            formatted_time = f"{int(hours):02d}h:{int(minutes):02d}m:{int(seconds):02d}s"
-        elif 60 <= elapsed_time:
-            formatted_time = f"{int(minutes):02d}m:{int(seconds):02d}s"
-        else:
-            formatted_time = f"{elapsed_time}s"
+        formatted_time = (
+            f"{int(hours):02d}h:{int(minutes):02d}m:{int(seconds):02d}s"
+            if elapsed_time >= 120 else
+            f"{int(minutes):02d}m:{int(seconds):02d}s"
+            if elapsed_time >= 60 else
+            f"{elapsed_time:.2f}s"
+        )
 
-        # Check the number of arguments to handle the dynamic_table addition
-        if len(args) == 2:
-            file_name = os.path.basename(args[0])  # Get the file name
+        # Add row to dynamic table
+        if len(args) >= 2:
+            folder_name = args[2] if len(args) > 2 else ''
+            file_name = folder_name + '/' + os.path.basename(args[0]) if folder_name else os.path.basename(args[0])
             dynamic_table.add_row([args[1], file_name, formatted_time])
         else:
             dynamic_table.add_row(['', '', ''])
             dynamic_table.add_row(['', "Total", formatted_time])
 
-        # Log the function execution time
-        print(f"Function '{func.__name__}' took {formatted_time} to run.")
-        
-        return result  # Return the result of the original function
+        return result
 
     return wrapper
 
-
-
-# Step 4: Switch to the target application (e.g., Telegram)
 async def switch_to_application():
+    """Switch to Telegram application."""
     pyautogui.hotkey('win', '1')
     await asyncio.sleep(time_dale)
-# Step 5: Send the file to Telegram with the file name as caption
 
 @timeit
-async def send_file_to_telegram(file_path, attempt=1):
-    # Copy the file path to the clipboard
+async def send_file_to_telegram(file_path, attempt=1, folder_name=''):
+    """Send a file to Telegram."""
+
     pyperclip.copy(file_path)
     await asyncio.sleep(time_dale)
-    # Switch to Telegram
-    # await switch_to_application()
-    # Simulate Ctrl + O to open the "Attach" dialog
     pyautogui.hotkey('ctrl', 'o')
     await asyncio.sleep(time_dale)
-    # Paste the file path into the dialog
     pyautogui.hotkey('ctrl', 'v')
     await asyncio.sleep(time_dale)
-    # Pres Enter to confirm the file selection
     pyautogui.press('enter')
     await asyncio.sleep(time_dale)
-    # Copy the file name (without extension) as the caption
-    file_name_without_extension = os.path.splitext(os.path.basename(file_path))[0]
-    pyperclip.copy(file_name_without_extension)
-    # Paste the file name as the caption
-    pyautogui.hotkey('ctrl', 'v')
-    await asyncio.sleep(time_dale)
-    # Press Enter to send the file with the caption
-    pyautogui.press('enter')
-    await asyncio.sleep(2)  # Give extra time to ensure the file is sent
-    print(f'File "{file_path}" sent to Telegram.')
-    # await switch_to_application()
 
-# Main function to send files one by one to Telegram
+    # Only add the folder name as a prefix if the file is under a folder
+    file_name_without_extension = os.path.splitext(os.path.basename(file_path))[0]
+    if folder_name:
+        file_name_without_extension = folder_name + "_" + file_name_without_extension
+    pyperclip.copy(file_name_without_extension)
+    await asyncio.sleep(time_dale)
+    pyautogui.hotkey('ctrl', 'v')
+    await asyncio.sleep(time_dale)
+    pyautogui.press('enter')
+    await asyncio.sleep(2)
+    print(f'File "{file_path}" sent to Telegram.')
+
+async def process_folders(sorted_files_by_folder):
+    """Process all folders and send files to Telegram."""
+    for folder_data in sorted_files_by_folder[:-1]:
+        for folder_name, files in folder_data.items():
+            total_files = len(files)
+            for index, file_path in enumerate(files, start=1):
+                if folder_name == "Nothing_Folder_Name":
+                    await send_file_to_telegram(file_path, str(index))
+                else:
+                    await send_file_to_telegram(file_path, str(index), folder_name)
+                process_bar(index, total_files)
+                await asyncio.sleep(time_dale)
+
+
 @timeit
 async def main():
-    directory = sys.argv[1]  # Folder path
-    print(directory)
-    all_files = list_files_in_directory(directory)
-    # Iterate over each file and send it one by one
-    print("Uploading start .....")
+    """Main function to send files to Telegram."""
+    root_directory = sys.argv[1]
+    print('Reading files and folders...')
+    sorted_files_by_folder = get_sorted_files_by_folder(root_directory)
+    # Only append the sorted folder paths (not the boolean result)
+    folder_exists, folders_list, _ = check_dir_under_folder(root_directory)
+    if folder_exists:
+        sorted_files_by_folder.append(folders_list)
+    else:
+        dirc = sorted_files_by_folder[0]
+        for key in list(dirc.keys()):
+            data = dirc[key]
+            dirc.pop(key)
+            dirc["Nothing_Folder_Name"]=data
+        # sorted_files_by_folder[0] = dirc
+        sorted_files_by_folder.append([])
+
+    
+    print("Uploading started...")
     await switch_to_application()
-    filenum = 1
-    for file_name in all_files:
-        file_path = os.path.join(directory, file_name)
-        await send_file_to_telegram(file_path,str(filenum))
-        await asyncio.sleep(time_dale)  # Adding some delay before sending the next file
-        filenum = filenum + 1
+    await process_folders(sorted_files_by_folder)
     await switch_to_application()
-# Run the main function using asyncio
+
 if __name__ == '__main__':
     asyncio.run(main())
